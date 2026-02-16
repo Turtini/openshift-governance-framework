@@ -1,0 +1,38 @@
+# Purpose:
+#   Illustrative role bindings demonstrating how responsibilities can be assigned to distinct identity groups.
+#
+# Context:
+#   Separation of duties is reinforced when bindings align to institutional identity groups.
+#   This pattern demonstrates the concept without prescribing group naming conventions.
+#
+# Notes:
+#   - Replace group names with your IdP-backed groups.
+#   - Consider change management controls around binding modifications.
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: platform-governance-reader-binding
+subjects:
+  - kind: Group
+    name: platform-governance-team
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: platform-governance-reader
+  apiGroup: rbac.authorization.k8s.io
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: namespace-operator-binding
+  namespace: example-application
+subjects:
+  - kind: Group
+    name: application-team-example
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: namespace-operator
+  apiGroup: rbac.authorization.k8s.io
