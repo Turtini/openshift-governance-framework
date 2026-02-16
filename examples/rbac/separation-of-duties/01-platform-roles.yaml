@@ -1,0 +1,23 @@
+# Purpose:
+#   Illustrative cluster-scoped RBAC roles aligned with regulated OpenShift governance models.
+#
+# Context:
+#   Regulated environments benefit from separating platform governance responsibilities from application operations.
+#   This example demonstrates a governance-oriented role that avoids broad cluster-admin usage.
+#
+# Notes:
+#   - This is NOT a complete role set.
+#   - Organizations must adapt rules, approvals, and group mappings to institutional policy.
+#   - The goal is to demonstrate responsibility boundaries, not enumerate every permission required.
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: platform-governance-reader
+rules:
+  - apiGroups: [""]
+    resources: ["namespaces", "nodes"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["config.openshift.io"]
+    resources: ["clusterversions", "infrastructures", "oauths"]
+    verbs: ["get", "list", "watch"]
