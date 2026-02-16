@@ -1,0 +1,41 @@
+# Purpose:
+#   Illustrative admission policy enforcing required namespace labels.
+#
+# Context:
+#   Regulated OpenShift environments benefit from consistent namespace metadata
+#   to support ownership clarity, environment classification, and audit defensibility.
+#
+# Notes:
+#   - This example assumes use of a policy engine such as Kyverno.
+#   - Adapt required labels to institutional taxonomy.
+#   - Excludes common system namespaces to reduce operational friction.
+
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: enforce-namespace-labels
+spec:
+  validationFailureAction: enforce
+  background: true
+  rules:
+    - name: require-namespace-labels
+      match:
+        resources:
+          kinds:
+            - Namespace
+      exclude:
+        resources:
+          names:
+            - kube-system
+            - kube-public
+            - kube-node-lease
+            - openshift
+            - openshift-*
+      validate:
+        message: "Namespaces must include required governance labels."
+        pattern:
+          metadata:
+            labels:
+              owner: "?*"
+              environment: "?*"
+              mission: "?*"
