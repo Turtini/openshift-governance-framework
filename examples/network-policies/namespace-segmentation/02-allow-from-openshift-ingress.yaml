@@ -1,0 +1,30 @@
+# Purpose:
+#   Allow ingress traffic from the OpenShift ingress controller (router) to workloads in a namespace.
+#
+# Context:
+#   When applying a default-deny ingress posture, applications exposed via Routes will require
+#   an explicit allow policy permitting traffic from the OpenShift ingress controller namespace.
+#
+# Notes:
+#   - This example assumes the ingress controller runs in the `openshift-ingress` namespace.
+#   - Router pods are commonly labeled `app=router`.
+#   - Adapt namespace and pod labels based on your cluster’s ingress configuration.
+#   - Apply after `01-baseline-deny-ingress.yaml`.
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-from-openshift-ingress
+  namespace: example-application
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: openshift-ingress
+          podSelector:
+            matchLabels:
+              app: router
