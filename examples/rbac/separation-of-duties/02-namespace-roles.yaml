@@ -1,0 +1,23 @@
+# Purpose:
+#   Illustrative namespace-scoped RBAC roles aligned with application operations in regulated OpenShift environments.
+#
+# Context:
+#   Application teams should generally be empowered to manage workloads within a namespace boundary,
+#   while platform-level governance is retained at the cluster level.
+#
+# Notes:
+#   - This example is intentionally minimal.
+#   - Add verbs/resources based on organizational workload standards and risk tolerance.
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: namespace-operator
+  namespace: example-application
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "services", "configmaps", "secrets"]
+    verbs: ["create", "update", "delete", "get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources: ["deployments", "replicasets"]
+    verbs: ["create", "update", "delete", "get", "list", "watch"]
