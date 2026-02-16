@@ -46,3 +46,23 @@ Organizations should consider:
 - Identify ingress requirements for platform services (ingress controller, monitoring, logging) and encode them explicitly as follow-on allow policies.
 
 A default-deny posture should be rolled out deliberately, beginning with non-production namespaces and expanding as operational confidence increases.
+
+---
+
+## Egress Maturity
+
+While ingress segmentation reduces lateral movement risk, mature governance models also address outbound traffic controls.
+
+Default-deny egress represents a higher level of segmentation discipline. It requires institutions to explicitly define which external systems, platform services, and dependencies workloads are permitted to contact.
+
+A typical maturity progression includes:
+
+- Establishing a default-deny egress posture
+- Explicitly allowing DNS resolution
+- Permitting egress to centralized logging and monitoring systems
+- Defining additional allows for approved internal or external dependencies
+
+Egress segmentation strengthens data exfiltration controls, reinforces architectural intent, and improves audit defensibility by ensuring outbound communication paths are deliberate rather than implicit.
+
+Organizations should introduce egress controls incrementally, beginning with non-production environments and expanding as operational confidence increases.
+
