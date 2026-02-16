@@ -1,0 +1,22 @@
+# Purpose:
+#   Establish a baseline egress segmentation posture by default-denying egress traffic.
+#
+# Context:
+#   Default-deny egress reduces the likelihood of unintended data exfiltration paths and forces
+#   explicit definition of allowed outbound communication (DNS, logging, dependencies).
+#
+# Notes:
+#   - Apply per namespace.
+#   - This policy denies all egress unless explicitly allowed by additional policies.
+#   - Introduce allow rules deliberately to avoid operational disruption.
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-egress
+  namespace: example-application
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress: []
