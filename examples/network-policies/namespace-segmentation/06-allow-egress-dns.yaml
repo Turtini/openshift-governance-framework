@@ -1,0 +1,34 @@
+# Purpose:
+#   Allow egress to cluster DNS so workloads can resolve service names.
+#
+# Context:
+#   In default-deny egress environments, DNS resolution must be explicitly permitted.
+#   Without DNS, most applications will fail even when all other dependencies are available.
+#
+# Notes:
+#   - This example targets OpenShift DNS running in `openshift-dns`.
+#   - Pod labels may vary by OpenShift version and configuration; adapt selectors as needed.
+#   - DNS uses UDP/TCP 53.
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress-dns
+  namespace: example-application
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: openshift-dns
+          podSelector:
+            matchLabels:
+              dns.operator.openshift.io/daemonset-dns: default
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
