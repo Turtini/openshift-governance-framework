@@ -1,0 +1,33 @@
+# Purpose:
+#   Allow ingress traffic from logging components to workloads in a namespace.
+#
+# Context:
+#   Regulated environments often centralize logs for operational visibility and audit defensibility.
+#   When applying a default-deny ingress posture, certain logging architectures may require
+#   explicit allowances for logging components to reach workloads (e.g., for scraping endpoints,
+#   metadata collection, or health probing).
+#
+# Notes:
+#   - Logging implementations vary widely across institutions.
+#   - Adapt namespaces and pod labels to match your logging stack (Fluent Bit, Vector, Elasticsearch, Loki, etc.).
+#   - Many logging architectures primarily require egress allowances from workloads to collectors.
+#     This example focuses on an ingress allowance pattern consistent with this directory’s baseline.
+#   - Apply after `01-baseline-deny-ingress.yaml`.
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-from-logging
+  namespace: example-application
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: openshift-logging
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: logging
