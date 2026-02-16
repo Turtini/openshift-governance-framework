@@ -1,0 +1,31 @@
+# Purpose:
+#   Illustrative admission policy enforcing approved container registries.
+#
+# Context:
+#   Regulated OpenShift environments often require workloads to source container images
+#   from institutionally approved registries to reduce supply chain risk.
+#
+# Notes:
+#   - This example assumes use of a policy engine such as Kyverno.
+#   - Adapt registry domains and namespace scope to institutional standards.
+#   - Test thoroughly before enforcing in production environments.
+
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: enforce-approved-registries
+spec:
+  validationFailureAction: enforce
+  background: true
+  rules:
+    - name: validate-image-registry
+      match:
+        resources:
+          kinds:
+            - Pod
+      validate:
+        message: "Container images must originate from approved registries."
+        pattern:
+          spec:
+            containers:
+              - image: "approved-registry.example.gov/*"
