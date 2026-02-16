@@ -42,5 +42,6 @@ Organizations should consider:
 - Standard allow rules for ingress controllers and monitoring tools
 - Namespace labeling conventions to support policy targeting
 - Change management and testing procedures to prevent service disruption
+- Identify ingress requirements for platform services (ingress controller, monitoring, logging) and encode them explicitly as follow-on allow policies.
 
 A default-deny posture should be rolled out deliberately, beginning with non-production namespaces and expanding as operational confidence increases.
