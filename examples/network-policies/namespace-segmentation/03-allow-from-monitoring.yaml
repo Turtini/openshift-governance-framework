@@ -1,0 +1,36 @@
+# Purpose:
+#   Allow ingress traffic from cluster monitoring components to workloads in a namespace.
+#
+# Context:
+#   When applying a default-deny ingress posture, monitoring systems (metrics scraping and/or
+#   health probing) often require explicit network policy allowances to reach application endpoints.
+#
+# Notes:
+#   - This example targets common OpenShift monitoring namespaces.
+#   - Monitoring pod labels vary by environment; adapt `podSelector` matchLabels as needed.
+#   - Apply after `01-baseline-deny-ingress.yaml`.
+#   - This policy is intentionally scoped to monitoring namespaces to preserve segmentation intent.
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-from-monitoring
+  namespace: example-application
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: openshift-monitoring
+          podSelector:
+            matchLabels:
+              app: prometheus
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: openshift-user-workload-monitoring
+          podSelector:
+            matchLabels:
+              app: prometheus
