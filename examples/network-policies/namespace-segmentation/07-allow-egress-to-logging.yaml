@@ -1,0 +1,29 @@
+# Purpose:
+#   Allow egress from workloads to centralized logging components within the cluster.
+#
+# Context:
+#   Many logging architectures require workloads to send logs or telemetry to in-cluster collectors
+#   (directly or indirectly). Under default-deny egress, this traffic must be explicitly permitted.
+#
+# Notes:
+#   - Adapt namespaces to match your logging stack (e.g., openshift-logging, logging).
+#   - Consider further narrowing using podSelector and ports once collector endpoints are standardized.
+#   - This example demonstrates the pattern; institutions should tailor to their architecture.
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress-to-logging
+  namespace: example-application
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: openshift-logging
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: logging
