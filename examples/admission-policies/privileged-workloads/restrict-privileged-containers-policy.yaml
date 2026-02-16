@@ -1,0 +1,59 @@
+# Purpose:
+#   Illustrative admission policy restricting privileged container configurations.
+#
+# Context:
+#   Regulated OpenShift environments often restrict privileged workloads and host-level access
+#   to reduce attack surface and preserve isolation boundaries.
+#
+# Notes:
+#   - This example assumes use of a policy engine such as Kyverno.
+#   - Adapt exception handling to institutional mission requirements.
+#   - Test in non-production environments before enabling enforcement.
+
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: restrict-privileged-workloads
+spec:
+  validationFailureAction: enforce
+  background: true
+  rules:
+    - name: disallow-privileged-containers
+      match:
+        resources:
+          kinds:
+            - Pod
+      validate:
+        message: "Privileged containers are not permitted in this environment."
+        pattern:
+          spec:
+            containers:
+              - =(securityContext):
+                  =(privileged): false
+
+    - name: disallow-host-namespaces
+      match:
+        resources:
+          kinds:
+            - Pod
+      validate:
+        message: "hostNetwork/hostPID/hostIPC are not permitted in this environment."
+        pattern:
+          spec:
+            =(hostNetwork): false
+            =(hostPID): false
+            =(hostIPC): false
+
+    - name: disallow-hostpath-volumes
+      match:
+        resources:
+          kinds:
+            - Pod
+      validate:
+        message: "hostPath volumes are not permitted in this environment."
+        deny:
+          conditions:
+            any:
+              - key: "{{ request.object.spec.volumes[].hostPath | length(@) }}"
+                operator: GreaterThan
+                value: 0
