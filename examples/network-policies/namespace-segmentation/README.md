@@ -20,6 +20,7 @@ This baseline pattern is designed to create a clear, enforceable starting point.
 
 - Ingress traffic to pods in the namespace is denied by default
 - Only explicitly allowed ingress is permitted (added as follow-on policies)
+- Follow-on allow policies (such as ingress controller access) are applied explicitly to support Routes and shared platform services.
 
 ---
 
