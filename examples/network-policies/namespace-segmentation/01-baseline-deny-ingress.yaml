@@ -1,0 +1,22 @@
+# Purpose:
+#   Baseline namespace segmentation policy that default-denies ingress traffic.
+#
+# Context:
+#   Regulated OpenShift environments benefit from explicit, enforceable segmentation boundaries.
+#   Default-deny ingress forces allowed communication paths to be documented and encoded.
+#
+# Notes:
+#   - Apply per namespace.
+#   - This does not restrict egress traffic.
+#   - Introduce explicit allow policies as needed (ingress controller, monitoring, inter-service calls).
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-ingress
+  namespace: example-application
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress: []
