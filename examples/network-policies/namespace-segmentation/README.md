@@ -29,6 +29,7 @@ This baseline pattern is designed to create a clear, enforceable starting point.
 - It does not restrict egress traffic (baseline is ingress-focused)
 - It does not define application-specific allow rules
 - It does not implement service mesh policies
+- This baseline set focuses on ingress segmentation. Many logging architectures also require explicit egress policies from workloads to centralized collectors.
 
 This example provides a foundational constraint that organizations can build upon.
 
